@@ -2,9 +2,7 @@ import telebot
 from telebot import TeleBot
 import sqlite3 as sl
 import connect
-import schedule
-import time
-from telegram_bot_calendar import DetailedTelegramCalendar, LSTEP
+
 
 # Connection to telegram bot section
 bot: TeleBot = telebot.TeleBot(connect.token, parse_mode=None)
@@ -152,49 +150,6 @@ def delete_all_reminders():
 #         bot.edit_message_text(f"Select {LSTEP[step]}", c.message.chat.id, c.message.message_id, reply_markup=key)
 #     elif result:
 #         bot.edit_message_text(f"You selected {result}", c.message.chat.id, c.message.message_id)
-
-
-@bot.message_handler(commands=['calendar'])
-def set_up_day(message):
-    msg = bot.send_message(message.chat.id, 'Введите день недели, в который вы хотите получить напоминание')
-    bot.register_next_step_handler(msg, set_up_schedule)
-
-
-def set_up_schedule(message):
-    global time_when
-    time_when == "11:30"
-
-    if message.text == 'Понедельник':
-        schedule.every().monday.at(time_when).do(send_reminder(message))
-
-    elif message.text == 'Вторник':
-        schedule.every().tuesday.at(time_when).do(send_reminder(message))
-
-    elif message.text == 'Среда':
-        schedule.every().wednesday.at(time_when).do(send_reminder(message))
-
-    elif message.text == 'Четверг':
-        schedule.every().thursday.at(time_when).do(send_reminder(message))
-
-    elif message.text == 'Пятница':
-        schedule.every().friday.at(time_when).do(send_reminder(message))
-
-    elif message.text == 'Суббота':
-        schedule.every().saturday.at(time_when).do(send_reminder(message))
-
-    elif message.text == 'Воскресенье':
-        schedule.every().sunday.at(time_when).do(send_reminder(message))
-
-    else:
-        bot.send_message(message.chat.id, 'Такой день недели мне не знаком')
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
-
-
-def send_reminder(message):
-    bot.send_message(message.chat.id, 'Тестовый текст напоминания')
 
 
 bot.enable_save_next_step_handlers(delay=1)
